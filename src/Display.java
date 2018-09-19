@@ -11,7 +11,8 @@ public class Display {
 	// write your code here
     }
 
-    public void display(Bracket tournament) {
+    public Display(Bracket tournament) {
+
 
     }
 
