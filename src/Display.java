@@ -21,9 +21,9 @@ public class Display {
 
         }
 
-        public void display(Bracket tournament) {
+    }
 
-        }
+    public void display(Bracket tournament) {
 
     }
 }
