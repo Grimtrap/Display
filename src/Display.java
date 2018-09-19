@@ -11,6 +11,10 @@ public class Display {
 	// write your code here
     }
 
+    public void display(Bracket tournament) {
+
+    }
+
     private class DisplayPanel extends JPanel {
 
         public void paintComponent(Graphics g) {
@@ -23,7 +27,4 @@ public class Display {
 
     }
 
-    public void display(Bracket tournament) {
-
-    }
 }
