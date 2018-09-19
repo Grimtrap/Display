@@ -15,7 +15,9 @@ public class Display {
 
         public void paintComponent(Graphics g) {
 
-            
+            super.paintComponent(g);
+            setDoubleBuffered(true);
+
 
         }
 
