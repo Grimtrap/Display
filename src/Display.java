@@ -6,6 +6,8 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import static java.awt.Color.BLACK;
+
 
 //Util
 
@@ -13,8 +15,8 @@ import java.awt.event.KeyListener;
 class Display extends JFrame {
 
     //class variables
-    static JFrame window;
-    JPanel displayPanel;
+    private static JFrame window;
+    private JPanel displayPanel;
 
 
     //Main
@@ -24,8 +26,8 @@ class Display extends JFrame {
 
 
     //Constructor - this runs first
-    Display() {
-        super("My Game");
+    public Display() {
+        super("Tournament Bracket");
 
 
         // Set the frame to full screen
@@ -36,8 +38,8 @@ class Display extends JFrame {
 
         //Set up the game panel (where we put our graphics)
         displayPanel = new DisplayPanel();
-        this.add(new DisplayPanel());
-
+        displayPanel.setBackground(new Color(50,50,50,255));
+        this.add(displayPanel);
         MyKeyListener keyListener = new MyKeyListener();
         this.addKeyListener(keyListener);
 
@@ -58,13 +60,14 @@ class Display extends JFrame {
         public void paintComponent(Graphics g) {
             super.paintComponent(g); //required
             setDoubleBuffered(true);
+            g.setColor(BLACK);
             Image match = new ImageIcon("resources/match.png").getImage();
             //move enemies
 
 
             //check for collision
 
-            g.drawImage(match,500,500,500,250,null);
+            g.drawImage(match,50,50,100,50,null);
             //repaint
             repaint();
         }
