@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import static java.awt.Color.BLACK;
+import static java.awt.Color.WHITE;
 
 
 //Util
@@ -17,17 +18,20 @@ class Display extends JFrame {
     //class variables
     private static JFrame window;
     private JPanel displayPanel;
+    private Bracket tournament;
 
 
     //Main
     public static void main(String[] args) {
-        window = new Display();
+        window = new Display(new Bracket());
     }
 
 
     //Constructor - this runs first
-    public Display() {
+    public Display(Bracket tournament) {
         super("Tournament Bracket");
+
+        this.tournament = tournament;
 
 
         // Set the frame to full screen
@@ -38,7 +42,7 @@ class Display extends JFrame {
 
         //Set up the game panel (where we put our graphics)
         displayPanel = new DisplayPanel();
-        displayPanel.setBackground(new Color(50,50,50,255));
+        displayPanel.setBackground(new Color(10,10,10,255));
         this.add(displayPanel);
         MyKeyListener keyListener = new MyKeyListener();
         this.addKeyListener(keyListener);
@@ -58,6 +62,9 @@ class Display extends JFrame {
     // Inner class for the the game area - This is where all the drawing of the screen occurs
     private class DisplayPanel extends JPanel {
         public void paintComponent(Graphics g) {
+            int numOfRounds = tournament.getNumberOfRounds();
+
+
             super.paintComponent(g); //required
             setDoubleBuffered(true);
             g.setColor(BLACK);
@@ -65,12 +72,23 @@ class Display extends JFrame {
             //move enemies
 
 
+            //i = round number
+            for (int i = 1; i <= numOfRounds; i++) {
+
+                //j = match number
+                for (int j = 1; j <= tournament.getNumOfMatchesInRound(i); j++) {
+                    int gap = (int) Math.pow(2, (i-1));
+                    g.drawImage(match,30 + 160*(i-1),80*(j-1)*gap + 30*(i-1) + 30*gap,120,60,null);
+                }
+
+            }
+
+
             //check for collision
 
-            g.drawImage(match,50,50,100,50,null);
             //repaint
-            repaint();
         }
+
     }
 
     // -----------  Inner class for the keyboard listener - this detects key presses and runs the corresponding code
