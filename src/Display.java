@@ -66,6 +66,8 @@ public class Display extends JFrame {
 
     // Inner class for the the game area - This is where all the drawing of the screen occurs
     private class DisplayPanel extends JPanel {
+
+
         public void paintComponent(Graphics g) {
             Font font1 = new Font("Arial", Font.PLAIN, (int)(16*scaleRatio));
 
@@ -82,46 +84,53 @@ public class Display extends JFrame {
                 int gap = (int) Math.pow(2, (i-1));
                 int biggerGap = gap*2;
                 int x, y;
+                int connectionPointX, connectionPointY;
+
 
                 //j = match number
                 for (int j = 1; j <= tournament.getNumberOfMatchesInRound(i); j++) {
-
-
                     String[][] teams = tournament.getTeamsInMatch(i, j);
-                    x = (int)((30 + 180*(i-1))*scaleRatio); //initially 30 far away, 160 distance from each other, left edge
-                   // y = (int) ((90 * (j - 1) * gap + 45 * gap) * scaleRatio);
+
+
+                    x = (int)((30 + 180*(i-1))*scaleRatio); //spaces them out depending on match
+
+                    //generates gaps properly so they are evenly spaced
                     if(i == 1 && tournament.getNumberOfTeams()%2 == 1) {
 
                         y = (int)((90*(j)*gap + 45*gap)*scaleRatio);
+                        connectionPointY = (int)((90*(j/2)*biggerGap + 45*biggerGap + 35)*scaleRatio);
                     } else {
 
-                        y = (int) ((90 * (j - 1) * gap + 45 * gap) * scaleRatio); //uses gap to determine spacing between
+                        y = (int) ((90 * (j - 1) * gap + 45 * gap) * scaleRatio);
+                        connectionPointY = (int)((90*((j-1)/2)*biggerGap + 45*biggerGap + 35)*scaleRatio);//uses gap to determine spacing between
 
                     }
 
-                    int connectionPointX = (int)((30 + 180*(i))*scaleRatio);
-                    int connectionPointY = (int)((90*((j-1)/2)*biggerGap + 45*biggerGap + 35)*scaleRatio);
+                    connectionPointX = (int)((30 + 180*(i))*scaleRatio);
 
                     g.drawImage(match, x, y,(int)(140*scaleRatio),(int)(70*scaleRatio),null);
 
                     if(i < numOfRounds) {
                         g.drawLine((int)(x + 140* scaleRatio), (int)(y + 35*scaleRatio), connectionPointX, connectionPointY);
                     }
-
                     for (int u = 0; u < teams.length; u++) {
                         g.setFont(font1);
-
                         g.drawString(teams[u][teams[u].length-1], (int)(x+5*scaleRatio), (int)(y+30*scaleRatio+(35*scaleRatio)*u));
+                        update(g);
+
                     }
 
                 }
 
             }
 
-
             //check for collision
 
             //repaint
+        }
+
+        public void update(Graphics g) {
+            repaint();
         }
 
     }
