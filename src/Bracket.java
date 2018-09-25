@@ -5,7 +5,7 @@ public class Bracket {
     }
 
     public int getNumberOfRounds() {
-        return 6;
+        return 5;
     }
 
     public int getNumOfMatchesInRound(int round) {
