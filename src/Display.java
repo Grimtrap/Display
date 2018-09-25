@@ -46,7 +46,8 @@ public class Display extends JFrame {
         // Set the frame to full screen
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
-        scaleRatio = (double) Toolkit.getDefaultToolkit().getScreenSize().height / 1080; //scale ratio of the screen so it's compatible with other screens
+        scaleRatio = (double) Toolkit.getDefaultToolkit().getScreenSize().width / 1920; //scale ratio of the screen so it's compatible with other screens
+        System.out.println(scaleRatio);
         //frame.setResizable(false);
 
 
@@ -100,15 +101,15 @@ public class Display extends JFrame {
                     int connectionPointX = (int)((30 + 180*(i))*scaleRatio);
                     int connectionPointY = (int)((90*((j-1)/2)*biggerGap + 45*biggerGap + 35)*scaleRatio);
 
-                    g.drawImage(match, x, y,140,70,null);
+                    g.drawImage(match, x, y,(int)(140*scaleRatio),(int)(70*scaleRatio),null);
 
                     if(i < numOfRounds-1) {
-                        g.drawLine((int) ((x + 140) * scaleRatio), (int) ((y + 35) * scaleRatio), connectionPointX, connectionPointY);
+                        g.drawLine((int)(x + 140* scaleRatio), (int)(y + 35*scaleRatio), connectionPointX, connectionPointY);
                     }
 
                     for (int u = 0; u < teams.length; u++) {
                         g.setFont(font1);
-                        g.drawString(teams[u], x+5, y+35*u+25);
+                        g.drawString(teams[u], (int)(x+5*scaleRatio), (int)(y+30*scaleRatio+(35*scaleRatio)*u));
                     }
 
                 }
