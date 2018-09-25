@@ -12,8 +12,6 @@ public class DisplayTest {
         teams.add(new Team("gooddddddddd"));
         teams.add(new Team("badddddd"));
         teams.add(new Team("dsfssssd"));
-        teams.add(new Team("ooso"));
-
 
         SingleGenerator generator = new SingleGenerator(teams, true);
 
