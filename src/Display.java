@@ -85,9 +85,19 @@ public class Display extends JFrame {
 
                 //j = match number
                 for (int j = 1; j <= tournament.getNumberOfMatchesInRound(i); j++) {
+
+
                     String[][] teams = tournament.getTeamsInMatch(i, j);
                     x = (int)((30 + 180*(i-1))*scaleRatio); //initially 30 far away, 160 distance from each other, left edge
-                    y = (int)((90*(j-1)*gap + 45*gap)*scaleRatio); //uses gap to determine spacing between
+                   // y = (int) ((90 * (j - 1) * gap + 45 * gap) * scaleRatio);
+                    if(i == 1 && tournament.getNumberOfTeams()%2 == 1) {
+
+                        y = (int)((90*(j)*gap + 45*gap)*scaleRatio);
+                    } else {
+
+                        y = (int) ((90 * (j - 1) * gap + 45 * gap) * scaleRatio); //uses gap to determine spacing between
+
+                    }
 
                     int connectionPointX = (int)((30 + 180*(i))*scaleRatio);
                     int connectionPointY = (int)((90*((j-1)/2)*biggerGap + 45*biggerGap + 35)*scaleRatio);
@@ -100,7 +110,8 @@ public class Display extends JFrame {
 
                     for (int u = 0; u < teams.length; u++) {
                         g.setFont(font1);
-                        g.drawString(teams[u][0], (int)(x+5*scaleRatio), (int)(y+30*scaleRatio+(35*scaleRatio)*u));
+
+                        g.drawString(teams[u][teams[u].length-1], (int)(x+5*scaleRatio), (int)(y+30*scaleRatio+(35*scaleRatio)*u));
                     }
 
                 }
