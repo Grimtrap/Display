@@ -30,12 +30,6 @@ public class Display extends JFrame {
     private static double scaleRatio;
 
 
-    //Main
-    public static void main(String[] args) {
-        window = new Display(new Bracket());
-    }
-
-
     //Constructor - this runs first
     public Display(Bracket tournament) {
         super("Tournament Bracket");
@@ -77,13 +71,10 @@ public class Display extends JFrame {
 
             int numOfRounds = tournament.getNumberOfRounds();
 
-
-            super.paintComponent(g); //required
+            super.paintComponent(g);
             setDoubleBuffered(true);
             g.setColor(BLACK);
             Image match = new ImageIcon("resources/match.png").getImage();
-            //move enemies
-
 
             g.setColor(white);
             //i = round number
@@ -93,8 +84,8 @@ public class Display extends JFrame {
                 int x, y;
 
                 //j = match number
-                for (int j = 1; j <= tournament.getNumOfMatchesInRound(i); j++) {
-                    String[] teams = tournament.getTeamsInMatch(i, j);
+                for (int j = 1; j <= tournament.getNumberOfMatchesInRound(i); j++) {
+                    String[][] teams = tournament.getTeamsInMatch(i, j);
                     x = (int)((30 + 180*(i-1))*scaleRatio); //initially 30 far away, 160 distance from each other, left edge
                     y = (int)((90*(j-1)*gap + 45*gap)*scaleRatio); //uses gap to determine spacing between
 
@@ -103,13 +94,13 @@ public class Display extends JFrame {
 
                     g.drawImage(match, x, y,(int)(140*scaleRatio),(int)(70*scaleRatio),null);
 
-                    if(i < numOfRounds-1) {
+                    if(i < numOfRounds) {
                         g.drawLine((int)(x + 140* scaleRatio), (int)(y + 35*scaleRatio), connectionPointX, connectionPointY);
                     }
 
                     for (int u = 0; u < teams.length; u++) {
                         g.setFont(font1);
-                        g.drawString(teams[u], (int)(x+5*scaleRatio), (int)(y+30*scaleRatio+(35*scaleRatio)*u));
+                        g.drawString(teams[u][0], (int)(x+5*scaleRatio), (int)(y+30*scaleRatio+(35*scaleRatio)*u));
                     }
 
                 }
