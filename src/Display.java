@@ -18,46 +18,49 @@ import static java.awt.Color.WHITE;
 import static java.awt.Color.white;
 
 
-//Util
+    public class Display extends JFrame {
+
+        //class variables
+        private JPanel displayPanel;
+        private Bracket tournament;
+        private static double scaleRatio;
 
 
-public class Display extends JFrame {
+        /**
+         * Constructor for the display for the tournament
+         * @param tournament a generated bracket
+         */
+        public Display(Bracket tournament) {
+            super("Tournament Bracket");
 
-    //class variables
-    private static JFrame window;
-    private JPanel displayPanel;
-    private Bracket tournament;
-    private static double scaleRatio;
-
-
-    //Constructor - this runs first
-    public Display(Bracket tournament) {
-        super("Tournament Bracket");
-
-        this.tournament = tournament;
+            this.tournament = tournament;
 
 
-        // Set the frame to full screen
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
-        scaleRatio = (double) Toolkit.getDefaultToolkit().getScreenSize().width / 1920; //scale ratio of the screen so it's compatible with other screens
-        System.out.println(scaleRatio);
-        //frame.setResizable(false);
+            // Set the frame to full screen
+            this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+            scaleRatio = (double) Toolkit.getDefaultToolkit().getScreenSize().width / 1920; //scale ratio of the screen so it's compatible with other screens
+            System.out.println(scaleRatio);
+            //frame.setResizable(false);
 
 
-        //Set up the game panel (where we put our graphics)
-        displayPanel = new DisplayPanel();
-        displayPanel.setBackground(new Color(10,10,10,255));
-        this.add(displayPanel);
-        MyKeyListener keyListener = new MyKeyListener();
-        this.addKeyListener(keyListener);
+            //Set up the game panel (where we put our graphics)
+            displayPanel = new DisplayPanel();
+            displayPanel.setBackground(new Color(10, 10, 10, 255));
+            this.add(displayPanel);
+            MyKeyListener keyListener = new MyKeyListener();
+            this.addKeyListener(keyListener);
 
-        this.requestFocusInWindow(); //make sure the frame has focus
+            this.requestFocusInWindow(); //make sure the frame has focus
 
-        this.setVisible(true);
+            this.setVisible(true);
 
 
-    } //End of Constructor
+        }
+
+    public void update(Bracket tournament) {
+
+    }
 
 
     /**
@@ -68,6 +71,10 @@ public class Display extends JFrame {
     private class DisplayPanel extends JPanel {
 
 
+        /**
+         * draws the tournament graphics on the screen
+         * @param g graphics
+         */
         public void paintComponent(Graphics g) {
             Font font1 = new Font("Arial", Font.PLAIN, (int)(16*scaleRatio));
 
@@ -80,7 +87,7 @@ public class Display extends JFrame {
 
             g.setColor(white);
             //i = round number
-            for (int i = 1; i <= numOfRounds; i++) {
+            for (int i = numOfRounds; i > 0; i--) {
                 int gap = (int) Math.pow(2, (i-1));
                 int biggerGap = gap*2;
                 int x, y;
@@ -113,10 +120,13 @@ public class Display extends JFrame {
                     if(i < numOfRounds) {
                         g.drawLine((int)(x + 140* scaleRatio), (int)(y + 35*scaleRatio), connectionPointX, connectionPointY);
                     }
+
+
                     for (int u = 0; u < teams.length; u++) {
                         g.setFont(font1);
-                        g.drawString(teams[u][teams[u].length-1], (int)(x+5*scaleRatio), (int)(y+30*scaleRatio+(35*scaleRatio)*u));
-                        update(g);
+                        if(teams[u].length == 1) {
+                            g.drawString(teams[u][teams[u].length - 1], (int) (x + 5 * scaleRatio), (int) (y + 30 * scaleRatio + (35 * scaleRatio) * u));
+                        }
 
                     }
 
@@ -127,15 +137,13 @@ public class Display extends JFrame {
             //check for collision
 
             //repaint
-        }
-
-        public void update(Graphics g) {
             repaint();
         }
 
     }
 
     // -----------  Inner class for the keyboard listener - this detects key presses and runs the corresponding code
+
     private class MyKeyListener implements KeyListener {
 
         public void keyTyped(KeyEvent e) {
@@ -144,11 +152,11 @@ public class Display extends JFrame {
         public void keyPressed(KeyEvent e) {
             //System.out.println("keyPressed="+KeyEvent.getKeyText(e.getKeyCode()));
 
-            if (KeyEvent.getKeyText(e.getKeyCode()).equals("A")) {  //If 'D' is pressed
+            if (KeyEvent.getKeyText(e.getKeyCode()).equals("A")) {
 
             } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {  //If ESC is pressed
                 System.out.println("Quitting!"); //close frame & quit
-                window.dispose();
+
 
             }
         }
