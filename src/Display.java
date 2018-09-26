@@ -115,7 +115,9 @@ public class Display extends JFrame {
                     }
                     for (int u = 0; u < teams.length; u++) {
                         g.setFont(font1);
-                        g.drawString(teams[u][teams[u].length-1], (int)(x+5*scaleRatio), (int)(y+30*scaleRatio+(35*scaleRatio)*u));
+                        if(teams[u].length <= 1) {
+                            g.drawString(teams[u][teams[u].length - 1], (int) (x + 5 * scaleRatio), (int) (y + 30 * scaleRatio + (35 * scaleRatio) * u));
+                        }
                         update(g);
 
                     }
