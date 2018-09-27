@@ -1,21 +1,19 @@
 /*
 Display.java
-A program that displays tournament brackets
+A class that displays tournament brackets
 @author Eric Ke
 9/24/2018
- */
+*/
 
-//Graphics &GUI imports
+//graphics imports
 import javax.swing.*;
 import java.awt.*;
 
-//Keyboard imports
+//keyboard imports
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import static java.awt.Color.BLACK;
 import static java.awt.Color.WHITE;
-import static java.awt.Color.white;
 
 
 public class Display2 extends JFrame {
@@ -40,7 +38,6 @@ public class Display2 extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
         scaleRatio = (double) Toolkit.getDefaultToolkit().getScreenSize().width / 1920; //scale ratio of the screen so it's compatible with other screens
-        System.out.println(scaleRatio);
         //frame.setResizable(false);
 
 
@@ -116,23 +113,18 @@ public class Display2 extends JFrame {
          * @param g paintComponent graphics
          */
         private void drawSingleBracket(Graphics g) {
-            Font font1 = new Font("Arial", Font.PLAIN, (int)(16*scaleRatio));
-
-            int numOfRounds = tournament.getNumberOfRounds();
 
             super.paintComponent(g);
             setDoubleBuffered(true);
-            g.setColor(BLACK);
             Image match = new ImageIcon("resources/match.png").getImage();
 
-            g.setColor(white);
+            g.setColor(WHITE);
             //i = round number
             for (int i = tournament.getNumberOfRounds(); i > 0; i--) {
-                double center = Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2 - 70*scaleRatio;
+                double center = (Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2 - 20)*scaleRatio;
 
                 //j = match number
                 for (int j = 1; j <= tournament.getNumberOfMatchesInRound(i); j++) {
-                    System.out.println(i);
 
                     String[][] teams = tournament.getTeamsInMatch(i, j);
 
@@ -154,8 +146,8 @@ public class Display2 extends JFrame {
 
                         //draws the final bracket
                         if (i == tournament.getNumberOfRounds()) {
-                            g.drawImage(match, (int) ((600 + 180 * (i)) * scaleRatio), (int) (center), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
-                            drawTeams(g, teams, (int) ((600 + 180 * (i)) * scaleRatio), (int) (center));
+                            g.drawImage(match, (currentX), (int) (currentY), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
+                            drawTeams(g, teams, (currentX), (int) (currentY));
                         }
 
 
