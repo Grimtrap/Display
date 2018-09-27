@@ -40,7 +40,6 @@ import static java.awt.Color.white;
             this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
             scaleRatio = (double) Toolkit.getDefaultToolkit().getScreenSize().width / 1920; //scale ratio of the screen so it's compatible with other screens
-            System.out.println(scaleRatio);
             //frame.setResizable(false);
 
 
@@ -87,7 +86,7 @@ import static java.awt.Color.white;
 
             g.setColor(white);
             //i = round number
-            for (int i = numOfRounds; i > 0; i--) {
+            for (int i = numOfRounds; i > 1; i--) {
                 int gap = (int) Math.pow(2, (i-1));
                 int biggerGap = gap*2;
                 int x, y;
