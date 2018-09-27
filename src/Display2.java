@@ -78,6 +78,44 @@ public class Display2 extends JFrame {
          * @param g graphics
          */
         public void paintComponent(Graphics g) {
+
+            if(tournament instanceof SingleBracket) {
+                drawSingleBracket(g);
+            }
+            //check for collision
+
+            //repaint
+        }
+
+        /**
+         * checks whether a team from a previous match has the possibility to advance
+         * is for the purpose of drawing brackets in the correct positions
+         * @param team1 the list of teams to check against the other, from the current match
+         * @param team2 the list of teams from a match from a previous round
+         * @return whether or not a match should be drawn
+         */
+        private boolean checkTeams(String[] team1, String[][] team2) {
+
+            for(int i = 0; i < team1.length; i++) {
+                String current = team1[i];
+                for(int j = 0; j < team2.length; j++) {
+                    for(int k = 0; k < team2[j].length; k++) {
+                        String comparison = team2[j][k];
+                        if (current.equalsIgnoreCase(comparison)) { return true; }
+                    }
+
+                }
+            }
+            return false;
+
+        }
+
+
+        /**
+         * draws the tournament bracket on the screen for single brackets
+         * @param g paintComponent graphics
+         */
+        private void drawSingleBracket(Graphics g) {
             Font font1 = new Font("Arial", Font.PLAIN, (int)(16*scaleRatio));
 
             int numOfRounds = tournament.getNumberOfRounds();
@@ -89,14 +127,16 @@ public class Display2 extends JFrame {
 
             g.setColor(white);
             //i = round number
-            for (int i = numOfRounds; i > 0; i--) {
+            for (int i = tournament.getNumberOfRounds(); i > 0; i--) {
                 double center = Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2 - 70*scaleRatio;
 
                 //j = match number
                 for (int j = 1; j <= tournament.getNumberOfMatchesInRound(i); j++) {
                     System.out.println(i);
 
-                    String[][] teams = tournament.getTeamsInMatch(i, j);;
+                    String[][] teams = tournament.getTeamsInMatch(i, j);
+
+                    //coordinates
                     double baseY = (center/Math.pow(2, tournament.getNumberOfRounds() - i));
                     double gap = 2*baseY;
                     double currentY = baseY + (j-1)*gap;
@@ -110,13 +150,9 @@ public class Display2 extends JFrame {
 
                         String[][] teams1;
 
-                        try {
-                            teams1 = tournament.getTeamsInMatch(i - 1, u);
-                        } catch (Exception e) {
-                            teams1 = null;
-                        }
+                        teams1 = tournament.getTeamsInMatch(i - 1, u);
 
-
+                        //draws the final bracket
                         if (i == tournament.getNumberOfRounds()) {
                             g.drawImage(match, (int) ((600 + 180 * (i)) * scaleRatio), (int) (center), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
                             drawTeams(g, teams, (int) ((600 + 180 * (i)) * scaleRatio), (int) (center));
@@ -124,8 +160,8 @@ public class Display2 extends JFrame {
 
 
 
-                        try {
 
+                        //checks whether the winner of a previous match can go to the current match, draws accordingly
                             if (teams1 != null && teams1.length > 0) {
                                 if (checkTeams(teams[0], teams1)) {
                                     g.drawImage(match, connectionPointX, (int)(currentY-nextShift), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
@@ -145,53 +181,11 @@ public class Display2 extends JFrame {
 
                             }
 
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-
-
-                    }
-
-                    //look over later
-                    if(i < numOfRounds) {
-                       // g.drawLine((int)(x + 140* scaleRatio), (int)(y + 35*scaleRatio), connectionPointX, connectionPointY);
-                    }
-
-
-                    for (int u = 0; u < teams.length; u++) {
-                        g.setFont(font1);
-                        if(teams[u].length == 1) {
-                           // drawTeams(g, teams, 800, (int) (center  * ((j - 1) * 2)) );
-
-                        }
-
                     }
 
                 }
 
-
             }
-
-            //check for collision
-
-            //repaint
-        }
-
-        private boolean checkTeams(String[] team1, String[][] team2) {
-
-            for(int i = 0; i < team1.length; i++) {
-                String current = team1[i];
-                for(int j = 0; j < team2.length; j++) {
-                    for(int k = 0; k < team2[j].length; k++) {
-                        String comparison = team2[j][k];
-                        if (current.equalsIgnoreCase(comparison)) { return true; }
-                    }
-
-                }
-            }
-            return false;
-
         }
 
         private void drawTeams(Graphics g, String[][] teams, int x, int y) {
