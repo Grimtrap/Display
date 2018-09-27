@@ -12,8 +12,11 @@ public class DisplayTest {
         teams.add(new Team("e"));
         teams.add(new Team("f"));
         teams.add(new Team("g"));
-        teams.add(new Team("h"));
+        /*teams.add(new Team("h"));
         teams.add(new Team("i"));
+        teams.add(new Team("j"));
+        teams.add(new Team("k"));*/
+
 
 
 

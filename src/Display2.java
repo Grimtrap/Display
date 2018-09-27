@@ -90,23 +90,25 @@ public class Display2 extends JFrame {
             g.setColor(white);
             //i = round number
             for (int i = numOfRounds; i > 0; i--) {
-                int gap = (int) Math.pow(2, (i-1));
                 double center = Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2 - 70*scaleRatio;
-                int x, yValueMultiplier;
-                int connectionPointX, connectionPointY;
 
                 //j = match number
                 for (int j = 1; j <= tournament.getNumberOfMatchesInRound(i); j++) {
                     System.out.println(i);
 
-                    String[][] teams = tournament.getTeamsInMatch(i, j);
+                    String[][] teams = tournament.getTeamsInMatch(i, j);;
+                    double baseY = (center/Math.pow(2, tournament.getNumberOfRounds() - i));
+                    double gap = 2*baseY;
+                    double currentY = baseY + (j-1)*gap;
+                    int currentX = (int)((600 + 180 * (i)) * scaleRatio);
+                    double nextShift = baseY/2;
 
 
                     for(int u = 1; u <= tournament.getNumberOfMatchesInRound(i-1); u++) {
 
-                        String[][] teams2;
-                        String[][] teams1;
+                        int connectionPointX = (int) ((600 + 180 * (i - 1)) * scaleRatio);
 
+                        String[][] teams1;
 
                         try {
                             teams1 = tournament.getTeamsInMatch(i - 1, u);
@@ -114,32 +116,34 @@ public class Display2 extends JFrame {
                             teams1 = null;
                         }
 
-                        //generates gaps properly so they are evenly spaced
-                        yValueMultiplier = (int) (center / (Math.pow(2, tournament.getNumberOfRounds() - i + 1)));
-
-                        connectionPointX = (int) ((600 + 180 * (i - 1)) * scaleRatio);
-                        x = (int) ((600 + 180 * (i)) * scaleRatio);
 
                         if (i == tournament.getNumberOfRounds()) {
                             g.drawImage(match, (int) ((600 + 180 * (i)) * scaleRatio), (int) (center), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
+                            drawTeams(g, teams, (int) ((600 + 180 * (i)) * scaleRatio), (int) (center));
                         }
+
 
 
                         try {
 
                             if (teams1 != null && teams1.length > 0) {
                                 if (checkTeams(teams[0], teams1)) {
-                                    g.drawImage(match, connectionPointX, (int) (center - yValueMultiplier - yValueMultiplier * ((j - 1) * 2)), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
+                                    g.drawImage(match, connectionPointX, (int)(currentY-nextShift), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
+                                    g.drawLine(currentX, (int)(currentY+(35*scaleRatio)), (int)(connectionPointX+140*scaleRatio), (int)(currentY-nextShift+35*scaleRatio));
+                                    drawTeams(g, teams1, connectionPointX, (int)(currentY-nextShift));
+
                                 }
 
                             }
                             if (teams1 != null && teams1.length > 0) {
                                 if (checkTeams(teams[1], teams1)) {
-                                    g.drawImage(match, connectionPointX, (int) (center + yValueMultiplier + yValueMultiplier * ((j - 1) * 2)), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
+                                    g.drawImage(match, connectionPointX, (int)(currentY+nextShift), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
+                                    g.drawLine(currentX, (int)(currentY+(35*scaleRatio)), (int)(connectionPointX+140*scaleRatio), (int)(currentY+nextShift+35*scaleRatio));
+
+                                    drawTeams(g, teams1, connectionPointX, (int)(currentY+nextShift));
                                 }
 
                             }
-
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -158,7 +162,7 @@ public class Display2 extends JFrame {
                     for (int u = 0; u < teams.length; u++) {
                         g.setFont(font1);
                         if(teams[u].length == 1) {
-                          // g.drawString(teams[u][teams[u].length - 1], (int) (connectionPointX + 5 * scaleRatio), (int) (100*i + 30 * scaleRatio + (35 * scaleRatio) * u));
+                           // drawTeams(g, teams, 800, (int) (center  * ((j - 1) * 2)) );
 
                         }
 
@@ -187,6 +191,18 @@ public class Display2 extends JFrame {
                 }
             }
             return false;
+
+        }
+
+        private void drawTeams(Graphics g, String[][] teams, int x, int y) {
+            for (int i = 0; i< teams.length; i++) {
+                //if(teams[i].length == 1) {
+                    Font font = new Font("Arial", Font.PLAIN, (int)(16*scaleRatio));
+                    g.setFont(font);
+                    g.setColor(WHITE);
+                    g.drawString(teams[i][0], (int)(x+15*scaleRatio), y+15+25*i);
+                //}
+            }
 
         }
 
