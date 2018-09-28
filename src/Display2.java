@@ -121,7 +121,7 @@ public class Display2 extends JFrame {
             g.setColor(WHITE);
             //i = round number
             for (int i = tournament.getNumberOfRounds(); i > 0; i--) {
-                double center = (Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2 - 20)*scaleRatio;
+                double center = (Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2) - 140*scaleRatio;
 
                 //j = match number
                 for (int j = 1; j <= tournament.getNumberOfMatchesInRound(i); j++) {
@@ -129,9 +129,9 @@ public class Display2 extends JFrame {
                     String[][] teams = tournament.getTeamsInMatch(i, j);
 
                     //coordinates
-                    double baseY = (center/Math.pow(2, tournament.getNumberOfRounds() - i));
+                    double baseY = (center/Math.pow(2, tournament.getNumberOfRounds() - i))*scaleRatio;
                     double gap = 2*baseY;
-                    double currentY = baseY + (j-1)*gap;
+                    double currentY = (baseY + (j-1)*gap)*scaleRatio;
                     int currentX = (int)((600 + 180 * (i)) * scaleRatio);
                     double nextShift = baseY/2;
 
@@ -186,7 +186,7 @@ public class Display2 extends JFrame {
                     Font font = new Font("Arial", Font.PLAIN, (int)(16*scaleRatio));
                     g.setFont(font);
                     g.setColor(WHITE);
-                    g.drawString(teams[i][0], (int)(x+15*scaleRatio), y+15+25*i);
+                    g.drawString(teams[i][0], (int)(x+15*scaleRatio), (int)(y+(25+35*i)*scaleRatio));
                 //}
             }
 
