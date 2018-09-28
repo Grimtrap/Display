@@ -144,6 +144,10 @@ public class Display extends JFrame {
                     double gap = 2*baseY;
                     double currentY = (baseY + (j-1)*gap);
                     double nextShift = baseY/2;
+                    if (i == tournament.getNumberOfRounds()) {
+                        g.drawImage(match, (currentX), (int) (currentY), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
+                        drawTeams(g, teams, (currentX), (int) (currentY));
+                    }
 
 
                     for(int u = 1; u <= tournament.getNumberOfMatchesInRound(i-1); u++) {
@@ -155,10 +159,6 @@ public class Display extends JFrame {
                         teams1 = tournament.getTeamsInMatch(i - 1, u);
 
                         //draws the final bracket
-                        if (i == tournament.getNumberOfRounds()) {
-                            g.drawImage(match, (currentX), (int) (currentY), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
-                            drawTeams(g, teams, (currentX), (int) (currentY));
-                        }
 
 
 
@@ -192,12 +192,12 @@ public class Display extends JFrame {
 
         private void drawTeams(Graphics g, String[][] teams, int x, int y) {
             for (int i = 0; i< teams.length; i++) {
-                if(teams[i].length == 1) {
+               // if(teams[i].length == 1) {
                     Font font = new Font("Arial", Font.PLAIN, (int)(16*scaleRatio));
                     g.setFont(font);
                     g.setColor(WHITE);
                     g.drawString(teams[i][0], (int)(x+15*scaleRatio), (int)(y+(25+35*i)*scaleRatio));
-                }
+                //}
             }
 
         }
