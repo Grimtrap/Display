@@ -55,6 +55,11 @@ public class Display2 extends JFrame {
 
     }
 
+    /**
+     * updates the screen
+     *
+     * @param tournament
+     */
     public void update(Bracket tournament) {
         this.dispose();
         new Display2(tournament);
@@ -121,6 +126,12 @@ public class Display2 extends JFrame {
             g.setColor(WHITE);
             //i = round number
             for (int i = tournament.getNumberOfRounds(); i > 0; i--) {
+                int currentX = (int)((600 + 180 * (i)) * scaleRatio);
+
+                Font font1 = new Font("Arial", Font.BOLD, (int)(22*scaleRatio));
+                g.setFont(font1);
+                g.drawString("Round " + i, currentX, (int)(40*scaleRatio));
+
                 double center = (Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2) - 100*scaleRatio;
 
                 //j = match number
@@ -132,7 +143,6 @@ public class Display2 extends JFrame {
                     double baseY = (center/Math.pow(2, tournament.getNumberOfRounds() - i))*scaleRatio;
                     double gap = 2*baseY;
                     double currentY = (baseY + (j-1)*gap);
-                    int currentX = (int)((600 + 180 * (i)) * scaleRatio);
                     double nextShift = baseY/2;
 
 
