@@ -26,7 +26,7 @@ public class DisplayTest {
         SingleGenerator generator = new SingleGenerator(teams, true);
 
 
-        new Display2(generator.getBracket());
+        new Display(generator.getBracket());
 
     }
 
