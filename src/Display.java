@@ -40,12 +40,15 @@ public class Display extends JFrame {
         // Set the frame to full screen
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
+
+        //height multiplier for more teams
         if(tournament.getNumberOfRounds() < 4) {
             heightMultiplier = 1;
         } else {
             heightMultiplier = Math.pow(2, tournament.getNumberOfRounds()-4);
         }
 
+        //width multiplier for more teams
         if(tournament.getNumberOfRounds() > 5) {
             widthMultiplier = 180*(tournament.getNumberOfRounds()-5);
         }
@@ -63,10 +66,9 @@ public class Display extends JFrame {
         displayPanel = new DisplayPanel();
         displayPanel.setBackground(new Color(10, 10, 10, 255));
         displayPanel.setPreferredSize(new Dimension((int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth()+ widthMultiplier), (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()* heightMultiplier)));
+
+        //scroll bar
         JScrollPane scroll = new JScrollPane(displayPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
-
-
         this.add(scroll);
         MyKeyListener keyListener = new MyKeyListener();
         this.addKeyListener(keyListener);
@@ -167,12 +169,15 @@ public class Display extends JFrame {
                     double gap = (center/Math.pow(2, tournament.getNumberOfRounds() - i -1));
                     double currentY = (baseY + (j-1)*gap + 140*scaleRatio);
                     double nextShift = baseY/2;
+
+                    //draw final round
                     if (i == tournament.getNumberOfRounds()) {
                         g.drawImage(match, (currentX), (int) (currentY), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
                         drawTeams(g, teams, (currentX), (int) (currentY));
                     }
 
 
+                    //determines whether certain matches exist or not
                     for(int u = 1; u <= tournament.getNumberOfMatchesInRound(i-1); u++) {
 
                         int connectionPointX = (int) ((50 + 180 * (i - 1)) * scaleRatio);
@@ -182,8 +187,6 @@ public class Display extends JFrame {
                         teams1 = tournament.getTeamsInMatch(i - 1, u);
 
                         //draws the final bracket
-
-
 
 
                         //checks whether the winner of a previous match can go to the current match, draws accordingly
@@ -213,6 +216,13 @@ public class Display extends JFrame {
             }
         }
 
+        /**
+         *
+         * @param g paintComponent graphics
+         * @param teams the teams that will be drawn
+         * @param x the x coordinate
+         * @param y the y coordinate
+         */
         private void drawTeams(Graphics g, String[][] teams, int x, int y) {
             for (int i = 0; i< teams.length; i++) {
                // if(teams[i].length == 1) {
