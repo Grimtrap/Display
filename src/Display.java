@@ -22,6 +22,9 @@ public class Display extends JFrame {
     private JPanel displayPanel;
     private Bracket tournament;
     private static double scaleRatio;
+    private static double heightMultiplier;
+    private static double widthMultiplier = 0;
+
 
 
     /**
@@ -36,15 +39,35 @@ public class Display extends JFrame {
 
         // Set the frame to full screen
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
-        scaleRatio = (double) Toolkit.getDefaultToolkit().getScreenSize().width / 1920; //scale ratio of the screen so it's compatible with other screens
+
+        if(tournament.getNumberOfRounds() < 4) {
+            heightMultiplier = 1;
+        } else {
+            heightMultiplier = Math.pow(2, tournament.getNumberOfRounds()-4);
+        }
+
+        if(tournament.getNumberOfRounds() > 5) {
+            widthMultiplier = 180*(tournament.getNumberOfRounds()-5);
+        }
+
+
+
+        this.setSize((int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth()* + widthMultiplier), (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()* heightMultiplier));
+        this.setPreferredSize(new Dimension((int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth()+ widthMultiplier), (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()* heightMultiplier)));
+        this.pack();
+        scaleRatio = (double) (Toolkit.getDefaultToolkit().getScreenSize().width / 1920); //scale ratio of the screen so it's compatible with other screens
         //frame.setResizable(false);
 
 
         //Set up the game panel (where we put our graphics)
         displayPanel = new DisplayPanel();
         displayPanel.setBackground(new Color(10, 10, 10, 255));
-        this.add(displayPanel);
+        displayPanel.setPreferredSize(new Dimension((int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth()+ widthMultiplier), (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()* heightMultiplier)));
+        JScrollPane scroll = new JScrollPane(displayPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+
+
+        this.add(scroll);
         MyKeyListener keyListener = new MyKeyListener();
         this.addKeyListener(keyListener);
 
@@ -58,7 +81,7 @@ public class Display extends JFrame {
     /**
      * updates the screen
      *
-     * @param tournament
+     * @param tournament the tournament bracket
      */
     public void update(Bracket tournament) {
         this.dispose();
@@ -126,13 +149,13 @@ public class Display extends JFrame {
             g.setColor(WHITE);
             //i = round number
             for (int i = tournament.getNumberOfRounds(); i > 0; i--) {
-                int currentX = (int)((600 + 180 * (i)) * scaleRatio);
+                int currentX = (int)((50 + 180 * (i)) * scaleRatio);
 
                 Font font1 = new Font("Arial", Font.BOLD, (int)(22*scaleRatio));
                 g.setFont(font1);
-                g.drawString("Round " + i, currentX, (int)(40*scaleRatio));
+                g.drawString("Round " + i, currentX, (int)(70*scaleRatio));
 
-                double center = (Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2) - 100*scaleRatio;
+                double center = (Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2)* heightMultiplier - 140*scaleRatio;
 
                 //j = match number
                 for (int j = 1; j <= tournament.getNumberOfMatchesInRound(i); j++) {
@@ -140,9 +163,9 @@ public class Display extends JFrame {
                     String[][] teams = tournament.getTeamsInMatch(i, j);
 
                     //coordinates
-                    double baseY = (center/Math.pow(2, tournament.getNumberOfRounds() - i))*scaleRatio;
-                    double gap = 2*baseY;
-                    double currentY = (baseY + (j-1)*gap);
+                    double baseY = (center/Math.pow(2, tournament.getNumberOfRounds() - i));
+                    double gap = (center/Math.pow(2, tournament.getNumberOfRounds() - i -1));
+                    double currentY = (baseY + (j-1)*gap + 140*scaleRatio);
                     double nextShift = baseY/2;
                     if (i == tournament.getNumberOfRounds()) {
                         g.drawImage(match, (currentX), (int) (currentY), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
@@ -152,7 +175,7 @@ public class Display extends JFrame {
 
                     for(int u = 1; u <= tournament.getNumberOfMatchesInRound(i-1); u++) {
 
-                        int connectionPointX = (int) ((600 + 180 * (i - 1)) * scaleRatio);
+                        int connectionPointX = (int) ((50 + 180 * (i - 1)) * scaleRatio);
 
                         String[][] teams1;
 
