@@ -173,7 +173,7 @@ public class Display extends JFrame {
                     //draw final round
                     if (i == tournament.getNumberOfRounds()) {
                         g.drawImage(match, (currentX), (int) (currentY), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
-                        drawTeams(g, teams, (currentX), (int) (currentY));
+                        drawTeams(g, teams, (currentX), (int) (currentY), i-1, j);
                     }
 
 
@@ -194,7 +194,7 @@ public class Display extends JFrame {
                                 if (checkTeams(teams[0], teams1)) {
                                     g.drawImage(match, connectionPointX, (int)(currentY-nextShift), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
                                     g.drawLine(currentX, (int)(currentY+(35*scaleRatio)), (int)(connectionPointX+140*scaleRatio), (int)(currentY-nextShift+35*scaleRatio));
-                                    drawTeams(g, teams1, connectionPointX, (int)(currentY-nextShift));
+                                    drawTeams(g, teams1, connectionPointX, (int)(currentY-nextShift), i-1, j);
 
                                 }
 
@@ -204,7 +204,7 @@ public class Display extends JFrame {
                                     g.drawImage(match, connectionPointX, (int)(currentY+nextShift), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
                                     g.drawLine(currentX, (int)(currentY+(35*scaleRatio)), (int)(connectionPointX+140*scaleRatio), (int)(currentY+nextShift+35*scaleRatio));
 
-                                    drawTeams(g, teams1, connectionPointX, (int)(currentY+nextShift));
+                                    drawTeams(g, teams1, connectionPointX, (int)(currentY+nextShift), i-1 ,j);
                                 }
 
                             }
@@ -223,14 +223,21 @@ public class Display extends JFrame {
          * @param x the x coordinate
          * @param y the y coordinate
          */
-        private void drawTeams(Graphics g, String[][] teams, int x, int y) {
+        private void drawTeams(Graphics g, String[][] teams, int x, int y, int round, int match) {
+
+            Font font = new Font("Arial", Font.PLAIN, (int)(16*scaleRatio));
+            g.setFont(font);
+            g.setColor(WHITE);
             for (int i = 0; i< teams.length; i++) {
-               // if(teams[i].length == 1) {
-                    Font font = new Font("Arial", Font.PLAIN, (int)(16*scaleRatio));
-                    g.setFont(font);
-                    g.setColor(WHITE);
+               if(teams[i].length == 1) {
                     g.drawString(teams[i][0], (int)(x+15*scaleRatio), (int)(y+(25+35*i)*scaleRatio));
-                //}
+                } else {
+                   try { //display previous match winner in the correct position
+                       g.drawString(((SingleBracket) (tournament)).getMatchWinner(round, match*2 -(1-i)), (int) (x + 15 * scaleRatio), (int) (y + (25 + 35 * i) * scaleRatio));
+                   } catch (Exception e) {
+                       e.printStackTrace();
+                   }
+               }
             }
 
         }
