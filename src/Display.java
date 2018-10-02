@@ -22,7 +22,7 @@ public class Display extends JFrame {
     private JPanel displayPanel;
     private Bracket tournament;
     private static double scaleRatio;
-    private static double heightMultiplier;
+    private static double heightMultiplier = 1;
     private static double widthMultiplier = 0;
 
 
@@ -35,6 +35,9 @@ public class Display extends JFrame {
         super("Tournament Bracket");
 
         this.tournament = tournament;
+
+        scaleRatio = (double)(Toolkit.getDefaultToolkit().getScreenSize().width / 1920.0); //scale ratio of the screen so it's compatible with other screens
+
 
 
         // Set the frame to full screen
@@ -50,15 +53,13 @@ public class Display extends JFrame {
 
         //width multiplier for more teams
         if(tournament.getNumberOfRounds() > 5) {
-            widthMultiplier = 180*(tournament.getNumberOfRounds()-5);
+            widthMultiplier = scaleRatio*180*(tournament.getNumberOfRounds()-5);
         }
 
 
 
         this.setSize((int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth()* + widthMultiplier), (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()* heightMultiplier));
         this.setPreferredSize(new Dimension((int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth()+ widthMultiplier), (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()* heightMultiplier)));
-        this.pack();
-        scaleRatio = (double) (Toolkit.getDefaultToolkit().getScreenSize().width / 1920); //scale ratio of the screen so it's compatible with other screens
         //frame.setResizable(false);
 
 
@@ -66,7 +67,7 @@ public class Display extends JFrame {
         displayPanel = new DisplayPanel();
         displayPanel.setBackground(new Color(10, 10, 10, 255));
         displayPanel.setPreferredSize(new Dimension((int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth()+ widthMultiplier), (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()* heightMultiplier)));
-
+        this.pack();
         //scroll bar
         JScrollPane scroll = new JScrollPane(displayPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         this.add(scroll);
