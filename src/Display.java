@@ -71,8 +71,6 @@ public class Display extends JFrame {
         //scroll bar
         JScrollPane scroll = new JScrollPane(displayPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         this.add(scroll);
-        MyKeyListener keyListener = new MyKeyListener();
-        this.addKeyListener(keyListener);
 
         this.requestFocusInWindow(); //make sure the frame has focus
 
@@ -246,27 +244,5 @@ public class Display extends JFrame {
     }
 
     // -----------  Inner class for the keyboard listener - this detects key presses and runs the corresponding code
-
-    private class MyKeyListener implements KeyListener {
-
-        public void keyTyped(KeyEvent e) {
-        }
-
-        public void keyPressed(KeyEvent e) {
-            //System.out.println("keyPressed="+KeyEvent.getKeyText(e.getKeyCode()));
-
-            if (KeyEvent.getKeyText(e.getKeyCode()).equals("A")) {
-                update(tournament);
-            } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {  //If ESC is pressed
-                System.out.println("Quitting!"); //close frame & quit
-
-
-            }
-        }
-
-        public void keyReleased(KeyEvent e) {
-        }
-        //end of keyboard listener
-    }
 }
   
