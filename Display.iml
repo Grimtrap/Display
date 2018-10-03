@@ -11,10 +11,12 @@
       <library>
         <CLASSES>
           <root url="file://$MODULE_DIR$/class files" />
+          <root url="jar://$MODULE_DIR$/class files/forms_rt.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="class files" level="project" />
   </component>
 </module>

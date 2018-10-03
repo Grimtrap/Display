@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class DisplayTest {
 
     public static void main(String[] args) {
-        /*
+
         ArrayList<Team> teams = new ArrayList();
 
         teams.add(new Team("a"));
@@ -40,8 +40,6 @@ public class DisplayTest {
         teams.add(new Team("af"));
 
         SingleGenerator generator = new SingleGenerator(teams, true);
-
-*/
         new ManagementSystem();
 
     }
