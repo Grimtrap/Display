@@ -257,7 +257,6 @@ public class Display extends JFrame {
 
             if (KeyEvent.getKeyText(e.getKeyCode()).equals("A")) {
                 update(tournament);
-
             } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {  //If ESC is pressed
                 System.out.println("Quitting!"); //close frame & quit
 
