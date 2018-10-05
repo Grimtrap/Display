@@ -147,16 +147,20 @@ public class Display extends JFrame {
             setDoubleBuffered(true);
             Image match = new ImageIcon("resources/match.png").getImage();
 
+            double center = (Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2)* heightMultiplier - 140*scaleRatio;
+
+
             g.setColor(WHITE);
             //i = round number
+
+            drawWinner(g, ((int)((50+180*(tournament.getNumberOfRounds()+1))*scaleRatio)), (int)center, ((SingleBracket)tournament).getTournamentWinner());
+
             for (int i = tournament.getNumberOfRounds(); i > 0; i--) {
                 int currentX = (int)((50 + 180 * (i)) * scaleRatio);
 
                 Font font1 = new Font("Arial", Font.BOLD, (int)(22*scaleRatio));
                 g.setFont(font1);
                 g.drawString("Round " + i, currentX, (int)(70*scaleRatio));
-
-                double center = (Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2)* heightMultiplier - 140*scaleRatio;
 
                 //j = match number
                 for (int j = 1; j <= tournament.getNumberOfMatchesInRound(i); j++) {
@@ -168,6 +172,7 @@ public class Display extends JFrame {
                     double gap = (center/Math.pow(2, tournament.getNumberOfRounds() - i -1));
                     double currentY = (baseY + (j-1)*gap + 140*scaleRatio);
                     double nextShift = baseY/2;
+
 
                     //draw final round
                     if (i == tournament.getNumberOfRounds()) {
@@ -234,10 +239,24 @@ public class Display extends JFrame {
                    try { //display previous match winner in the correct position
                        g.drawString(((SingleBracket) (tournament)).getMatchWinner(round, match*2 -(1-i)), (int) (x + 15 * scaleRatio), (int) (y + (25 + 35 * i) * scaleRatio));
                    } catch (Exception e) {
-                       e.printStackTrace();
+                       g.drawString("TBD", (int) (x + 15 * scaleRatio), (int) (y + (25 + 35 * i) * scaleRatio));
                    }
                }
             }
+
+        }
+
+        private void drawWinner(Graphics g, int x, int y, String winner) {
+
+            if(winner == null) {
+                winner = "TBD";
+            }
+
+            Font bigFont = new Font("Arial", Font.BOLD, 28) ;
+            g.setFont(bigFont);
+            g.drawRect(x,(int)(y+100*scaleRatio), (int)(400*scaleRatio), (int)(150*scaleRatio));
+            g.drawString("WINNER", (int)(x+50*scaleRatio),(int)(y+50*scaleRatio));
+            g.drawString(winner, (int)(x+50*scaleRatio),(int)(y+200*scaleRatio));
 
         }
 
