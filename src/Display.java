@@ -10,8 +10,6 @@ import javax.swing.*;
 import java.awt.*;
 
 //keyboard imports
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import static java.awt.Color.WHITE;
 
