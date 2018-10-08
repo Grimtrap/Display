@@ -10,8 +10,6 @@ import javax.swing.*;
 import java.awt.*;
 
 //keyboard imports
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import static java.awt.Color.WHITE;
 
@@ -36,7 +34,7 @@ public class Display extends JFrame {
 
         this.tournament = tournament;
 
-        scaleRatio = (double)(Toolkit.getDefaultToolkit().getScreenSize().width / 1920.0); //scale ratio of the screen so it's compatible with other screens
+        scaleRatio = (Toolkit.getDefaultToolkit().getScreenSize().width / 1920.0); //scale ratio of the screen so it's compatible with other screens
 
 
 
@@ -47,8 +45,10 @@ public class Display extends JFrame {
         //height multiplier for more teams
         if(tournament.getNumberOfRounds() < 4) {
             heightMultiplier = 1;
-        } else {
+        } else if (tournament instanceof SingleBracket){
             heightMultiplier = Math.pow(2, tournament.getNumberOfRounds()-4);
+        } else {
+            heightMultiplier = tournament.getNumberOfRounds(); //double bracket scaling
         }
 
         //width multiplier for more teams
@@ -71,8 +71,6 @@ public class Display extends JFrame {
         //scroll bar
         JScrollPane scroll = new JScrollPane(displayPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         this.add(scroll);
-        MyKeyListener keyListener = new MyKeyListener();
-        this.addKeyListener(keyListener);
 
         this.requestFocusInWindow(); //make sure the frame has focus
 
@@ -92,6 +90,21 @@ public class Display extends JFrame {
 
     }
 
+    private int getMaxNumOfMatches() {
+
+        int maxRounds = 0;
+
+        for(int i = 0; i < tournament.getNumberOfRounds(); i++) {
+            try {
+                if (tournament.getNumberOfMatchesInRound(i) > maxRounds)
+                    maxRounds = tournament.getNumberOfMatchesInRound(i);
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return maxRounds;
+    }
+
 
     /**
      * --------- INNER CLASSES -------------
@@ -109,7 +122,7 @@ public class Display extends JFrame {
 
             if(tournament instanceof SingleBracket) {
                 drawSingleBracket(g);
-            }else {
+            } else {
                 drawDoubleBracket(g);
             }
             //check for collision
@@ -126,14 +139,12 @@ public class Display extends JFrame {
          */
         private boolean checkTeams(String[] team1, String[][] team2) {
 
-            for (int i = 0; i < team1.length; i++) {
+            for(int i = 0; i < team1.length; i++) {
                 String current = team1[i];
-                for (int j = 0; j < team2.length; j++) {
-                    for (int k = 0; k < team2[j].length; k++) {
+                for(int j = 0; j < team2.length; j++) {
+                    for(int k = 0; k < team2[j].length; k++) {
                         String comparison = team2[j][k];
-                        if (current.equalsIgnoreCase(comparison)) {
-                            return true;
-                        }
+                        if (current.equalsIgnoreCase(comparison)) { return true; }
                     }
 
                 }
@@ -151,18 +162,23 @@ public class Display extends JFrame {
 
             super.paintComponent(g);
             setDoubleBuffered(true);
+
             Image match = new ImageIcon("resources/match.png").getImage();
+
+            double center = (Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2)* heightMultiplier - 140*scaleRatio;
+
 
             g.setColor(WHITE);
             //i = round number
+
+            drawWinner(g, ((int)((50+180*(tournament.getNumberOfRounds()+1))*scaleRatio)), (int)center, tournament.getTournamentWinner());
+
             for (int i = tournament.getNumberOfRounds(); i > 0; i--) {
                 int currentX = (int)((50 + 180 * (i)) * scaleRatio);
 
                 Font font1 = new Font("Arial", Font.BOLD, (int)(22*scaleRatio));
                 g.setFont(font1);
                 g.drawString("Round " + i, currentX, (int)(70*scaleRatio));
-
-                double center = (Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2)* heightMultiplier - 140*scaleRatio;
 
                 //j = match number
                 for (int j = 1; j <= tournament.getNumberOfMatchesInRound(i); j++) {
@@ -174,6 +190,7 @@ public class Display extends JFrame {
                     double gap = (center/Math.pow(2, tournament.getNumberOfRounds() - i -1));
                     double currentY = (baseY + (j-1)*gap + 140*scaleRatio);
                     double nextShift = baseY/2;
+
 
                     //draw final round
                     if (i == tournament.getNumberOfRounds()) {
@@ -195,24 +212,24 @@ public class Display extends JFrame {
 
 
                         //checks whether the winner of a previous match can go to the current match, draws accordingly
-                        if (teams1 != null && teams1.length > 0) {
-                            if (checkTeams(teams[0], teams1)) {
-                                g.drawImage(match, connectionPointX, (int)(currentY-nextShift), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
-                                g.drawLine(currentX, (int)(currentY+(35*scaleRatio)), (int)(connectionPointX+140*scaleRatio), (int)(currentY-nextShift+35*scaleRatio));
-                                drawTeams(g, teams1, connectionPointX, (int)(currentY-nextShift), i-1, j);
+                            if (teams1 != null && teams1.length > 0) {
+                                if (checkTeams(teams[0], teams1)) {
+                                    g.drawImage(match, connectionPointX, (int)(currentY-nextShift), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
+                                    g.drawLine(currentX, (int)(currentY+(35*scaleRatio)), (int)(connectionPointX+140*scaleRatio), (int)(currentY-nextShift+35*scaleRatio));
+                                    drawTeams(g, teams1, connectionPointX, (int)(currentY-nextShift), i-1, j);
+
+                                }
 
                             }
+                            if (teams1 != null && teams1.length > 0) {
+                                if (checkTeams(teams[1], teams1)) {
+                                    g.drawImage(match, connectionPointX, (int)(currentY+nextShift), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
+                                    g.drawLine(currentX, (int)(currentY+(35*scaleRatio)), (int)(connectionPointX+140*scaleRatio), (int)(currentY+nextShift+35*scaleRatio));
 
-                        }
-                        if (teams1 != null && teams1.length > 0) {
-                            if (checkTeams(teams[1], teams1)) {
-                                g.drawImage(match, connectionPointX, (int)(currentY+nextShift), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
-                                g.drawLine(currentX, (int)(currentY+(35*scaleRatio)), (int)(connectionPointX+140*scaleRatio), (int)(currentY+nextShift+35*scaleRatio));
+                                    drawTeams(g, teams1, connectionPointX, (int)(currentY+nextShift), i-1 ,j);
+                                }
 
-                                drawTeams(g, teams1, connectionPointX, (int)(currentY+nextShift), i-1 ,j);
                             }
-
-                        }
 
                     }
 
@@ -220,6 +237,33 @@ public class Display extends JFrame {
 
             }
         }
+
+        /**
+         *
+         * @param g paintComponent graphics
+         * @param teams the teams that will be drawn
+         * @param x the x coordinate
+         * @param y the y coordinate
+         */
+        private void drawTeams(Graphics g, String[][] teams, int x, int y, int round, int match) {
+
+            Font font = new Font("Arial", Font.PLAIN, (int)(16*scaleRatio));
+            g.setFont(font);
+            g.setColor(WHITE);
+            for (int i = 0; i< teams.length; i++) {
+               if(teams[i].length == 1) {
+                    g.drawString(teams[i][0], (int)(x+15*scaleRatio), (int)(y+(25+35*i)*scaleRatio));
+                } else {
+                   try { //display previous match winner in the correct position
+                       g.drawString(((SingleBracket) (tournament)).getMatchWinner(round, match*2 -(1-i)), (int) (x + 15 * scaleRatio), (int) (y + (25 + 35 * i) * scaleRatio));
+                   } catch (Exception e) {
+                       g.drawString("TBD", (int) (x + 15 * scaleRatio), (int) (y + (25 + 35 * i) * scaleRatio));
+                   }
+               }
+            }
+
+        }
+
 
         /**
          * draws the tournament bracket on the screen for double brackets
@@ -262,7 +306,6 @@ public class Display extends JFrame {
                         //g.drawImage(match, (currentX), (int) (winCurrentY), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
                         drawDoubleTeams(g, teams, (currentX), (int) (winCurrentY), i-1, j);
                     }
-                    //System.out.println(tournament.getNumberOfMatchesInRound(i-1));
 
                     else if (tournament.getMatchBracket(i,j) == 1 ) {
                         //currentX = (int)((50 + 180 * (i)) * scaleRatio);
@@ -346,33 +389,6 @@ public class Display extends JFrame {
 
         }
 
-
-        /**
-         *
-         * @param g paintComponent graphics
-         * @param teams the teams that will be drawn
-         * @param x the x coordinate
-         * @param y the y coordinate
-         */
-        private void drawTeams(Graphics g, String[][] teams, int x, int y, int round, int match) {
-
-            Font font = new Font("Arial", Font.PLAIN, (int)(16*scaleRatio));
-            g.setFont(font);
-            g.setColor(WHITE);
-            for (int i = 0; i< teams.length; i++) {
-                if(teams[i].length == 1) {
-                    g.drawString(teams[i][0], (int)(x+15*scaleRatio), (int)(y+(25+35*i)*scaleRatio));
-                } else {
-                    try { //display previous match winner in the correct position
-                        g.drawString(((SingleBracket) (tournament)).getMatchWinner(round, match*2 -(1-i)), (int) (x + 15 * scaleRatio), (int) (y + (25 + 35 * i) * scaleRatio));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-        }
-
         private void drawDoubleTeams(Graphics g, String[][] teams, int x, int y, int round, int match) {
 
             Font font = new Font("Arial", Font.PLAIN, (int)(16*scaleRatio));
@@ -392,33 +408,24 @@ public class Display extends JFrame {
 
         }
 
+
+
+        private void drawWinner(Graphics g, int x, int y, String winner) {
+
+            if(winner == null) {
+                winner = "TBD";
+            }
+
+            Font bigFont = new Font("Arial", Font.BOLD, 28) ;
+            g.setFont(bigFont);
+            g.drawRect(x,(int)(y+100*scaleRatio), (int)(400*scaleRatio), (int)(150*scaleRatio));
+            g.drawString("WINNER", (int)(x+50*scaleRatio),(int)(y+50*scaleRatio));
+            g.drawString(winner, (int)(x+50*scaleRatio),(int)(y+200*scaleRatio));
+
+        }
+
     }
-
-
 
     // -----------  Inner class for the keyboard listener - this detects key presses and runs the corresponding code
-
-    private class MyKeyListener implements KeyListener {
-
-        public void keyTyped(KeyEvent e) {
-        }
-
-        public void keyPressed(KeyEvent e) {
-            //System.out.println("keyPressed="+KeyEvent.getKeyText(e.getKeyCode()));
-
-            if (KeyEvent.getKeyText(e.getKeyCode()).equals("A")) {
-                update(tournament);
-
-            } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {  //If ESC is pressed
-                System.out.println("Quitting!"); //close frame & quit
-
-
-            }
-        }
-
-        public void keyReleased(KeyEvent e) {
-        }
-        //end of keyboard listener
-    }
 }
   
