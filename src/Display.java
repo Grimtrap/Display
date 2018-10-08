@@ -126,12 +126,14 @@ public class Display extends JFrame {
          */
         private boolean checkTeams(String[] team1, String[][] team2) {
 
-            for(int i = 0; i < team1.length; i++) {
+            for (int i = 0; i < team1.length; i++) {
                 String current = team1[i];
-                for(int j = 0; j < team2.length; j++) {
-                    for(int k = 0; k < team2[j].length; k++) {
+                for (int j = 0; j < team2.length; j++) {
+                    for (int k = 0; k < team2[j].length; k++) {
                         String comparison = team2[j][k];
-                        if (current.equalsIgnoreCase(comparison)) { return true; }
+                        if (current.equalsIgnoreCase(comparison)) {
+                            return true;
+                        }
                     }
 
                 }
@@ -230,6 +232,8 @@ public class Display extends JFrame {
             Image match = new ImageIcon("resources/match.png").getImage();
 
             g.setColor(WHITE);
+            //int i = 6;
+            //int j = 1;
             //i = round number
             for (int i = tournament.getNumberOfRounds(); i > 1; i--) {
                 int currentX = (int)((50 + 180 * (i)) * scaleRatio);
@@ -250,17 +254,18 @@ public class Display extends JFrame {
                     double gap = (center/Math.pow(2, tournament.getNumberOfRounds() - i -1));
                     //double currentY = (baseY + (j-1)*gap + 140*scaleRatio);
                     double winCurrentY = (baseY + (j-1)*gap + 140*scaleRatio);
-                    double loseCurrentY = (baseY + (j-1)*gap + 140*scaleRatio)*6;
+                    double loseCurrentY = (baseY + (j-1)*gap + 140*scaleRatio)*4;
                     double nextShift = baseY/2;
 
                     //draw final round
-                    if (i == tournament.getNumberOfRounds()) {
-                        g.drawImage(match, (currentX), (int) (winCurrentY), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
+                    if (i == tournament.getNumberOfRounds()) { //Displays winner
+                        //g.drawImage(match, (currentX), (int) (winCurrentY), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
                         drawDoubleTeams(g, teams, (currentX), (int) (winCurrentY), i-1, j);
                     }
                     //System.out.println(tournament.getNumberOfMatchesInRound(i-1));
 
-                    if (tournament.getMatchBracket(i,j) == 0 ) {
+                    else if (tournament.getMatchBracket(i,j) == 1 ) {
+                        //currentX = (int)((50 + 180 * (i)) * scaleRatio);
                         //determines whether certain matches exist or not
                         for (int u = 1; u <= tournament.getNumberOfMatchesInRound(i - 1); u++) {
 
@@ -270,11 +275,6 @@ public class Display extends JFrame {
 
                             teams1 = tournament.getTeamsInMatch(i - 1, u);
 
-
-                            //draws the final bracket
-
-                            //}
-                            //break;
                             //checks whether the winner of a previous match can go to the current match, draws accordingly
                             if (teams1 != null && teams1.length > 0) {
                                 if (checkTeams(teams[0], teams1)) {
@@ -298,41 +298,45 @@ public class Display extends JFrame {
                         }
                     }
 
-                    if (tournament.getMatchBracket(i,j) == 1 ) {
+                    else if (tournament.getMatchBracket(i,j) == 0 ) {
+                        //currentX = (int)((50 + 180 * (i-1)) * scaleRatio);
                         //determines whether certain matches exist or not
-                        for (int u = 1; u <= tournament.getNumberOfMatchesInRound(i - 1); u++) {
+                        if (i == 3) { //Only round 2 is considered loser bracket
+                            for (int u = 1; u <= tournament.getNumberOfMatchesInRound(i - 1); u++) {
 
-                            int connectionPointX = (int) ((50 + 180 * (i - 1)) * scaleRatio);
+                                int connectionPointX = (int) ((50 + 180 * (i - 2)) * scaleRatio);
 
-                            String[][] teams1;
+                                String[][] teams1;
 
-                            teams1 = tournament.getTeamsInMatch(i - 1, u);
+                                teams1 = tournament.getTeamsInMatch(i - 1, u);
 
 
-                            //draws the final bracket
+                                //draws the final bracket
 
-                            //}
-                            //break;
-                            //checks whether the winner of a previous match can go to the current match, draws accordingly
-                            if (teams1 != null && teams1.length > 0) {
-                                if (checkTeams(teams[0], teams1)) {
-                                    g.drawImage(match, connectionPointX, (int) (loseCurrentY - nextShift), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
-                                    //g.drawLine(currentX, (int) (winCurrentY + (35 * scaleRatio)), (int) (connectionPointX + 140 * scaleRatio), (int) (loseCurrentY - nextShift + 35 * scaleRatio));
-                                    drawDoubleTeams(g, teams1, connectionPointX, (int) (loseCurrentY - nextShift), i - 1, j);
+
+                                //checks whether the winner of a previous match can go to the current match, draws accordingly
+                                if (teams1 != null && teams1.length > 0) {
+                                    if (checkTeams(teams[0], teams1)) {
+                                        g.drawImage(match, connectionPointX, (int) (loseCurrentY - nextShift), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
+                                        //g.drawLine(currentX, (int) (winCurrentY + (35 * scaleRatio)), (int) (connectionPointX + 140 * scaleRatio), (int) (loseCurrentY - nextShift + 35 * scaleRatio));
+                                        //drawDoubleTeams(g, teams1, connectionPointX, (int) (loseCurrentY - nextShift), i - 1, j);
+                                        g.drawString("loser",connectionPointX, (int) (loseCurrentY - nextShift));
+
+                                    }
+
+                                }
+                                else if (teams1 != null && teams1.length > 0) {
+                                    if (checkTeams(teams[1], teams1)) {
+                                        g.drawImage(match, connectionPointX, (int) (loseCurrentY + nextShift), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
+                                        //g.drawLine(currentX, (int) (winCurrentY + (35 * scaleRatio)), (int) (connectionPointX + 140 * scaleRatio), (int) (winCurrentY + nextShift + 35 * scaleRatio));
+
+                                        drawDoubleTeams(g, teams1, connectionPointX, (int) (loseCurrentY + nextShift), i - 1, j);
+                                        g.drawString("loser",connectionPointX, (int) (loseCurrentY - nextShift));
+                                    }
 
                                 }
 
                             }
-                            if (teams1 != null && teams1.length > 0) {
-                                if (checkTeams(teams[1], teams1)) {
-                                    g.drawImage(match, connectionPointX, (int) (loseCurrentY + nextShift), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
-                                    //g.drawLine(currentX, (int) (winCurrentY + (35 * scaleRatio)), (int) (connectionPointX + 140 * scaleRatio), (int) (winCurrentY + nextShift + 35 * scaleRatio));
-
-                                    drawDoubleTeams(g, teams1, connectionPointX, (int) (loseCurrentY + nextShift), i - 1, j);
-                                }
-
-                            }
-
                         }
                     }
 
