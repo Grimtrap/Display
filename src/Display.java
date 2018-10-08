@@ -1,7 +1,7 @@
 /*
 Display.java
 A class that displays tournament brackets
-@author Eric Ke
+@author Eric Ke, Kyle To
 9/24/2018
 */
 
