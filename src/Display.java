@@ -87,7 +87,6 @@ public class Display extends JFrame {
     public void update(Bracket tournament) {
         this.dispose();
         new Display(tournament);
-
     }
 
     private int getMaxNumOfMatches() {
