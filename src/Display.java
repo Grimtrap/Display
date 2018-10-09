@@ -299,7 +299,7 @@ public class Display extends JFrame {
                 //coordinates
                 int xR = i * 200;
                 int xL = xR - 200;
-                int currentX = (xL + xR) / 2;
+                int currentX = (int)(((xL + xR) / 2)*scaleRatio);
                 double y1 = 0;
                 double y2 = tournament.getNumberOfTeams() * 100;
                 double hw = y2 - y1;
@@ -508,18 +508,18 @@ public class Display extends JFrame {
                                 //checks whether the winner of a previous match can go to the current match, draws accordingly
                                 if (teams1 != null && teams1.length > 0) {
                                     if (checkTeams(teams[0], teams1)) {
-                                        g.drawImage(match, currentX - 200, (int) (currentY - 50), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
+                                        g.drawImage(match, (int)(currentX - 200*scaleRatio), (int) (currentY - 50), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
                                         //g.drawLine(currentX, (int) (currentY + (35 * scaleRatio)), (int) (connectionPointX + 140 * scaleRatio), (int) (currentY - nextShift + 35 * scaleRatio));
-                                        drawDoubleTeams(g, teams1, currentX - 200, (int) (currentY - 20), i - 1, j);
+                                        drawDoubleTeams(g, teams1, (int)(currentX - 200*scaleRatio), (int) (currentY - 50), i - 1, j);
                                         String test = "Round " + (2) + " Match " + u;
                                         g.drawString(test, currentX - 200, (int) (currentY - 50));
 
                                     } else if (checkTeams(teams[1], teams1)) {
-                                        g.drawImage(match, currentX - 200, (int) (currentY + 50), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
+                                        g.drawImage(match, (int)(currentX - 200*scaleRatio), (int) (currentY + 50), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
                                         //g.drawLine(currentX, (int) (currentY + (35 * scaleRatio)), (int) (connectionPointX + 140 * scaleRatio), (int) (currentY + nextShift + 35 * scaleRatio));
-                                        drawDoubleTeams(g, teams1, currentX - 200, (int) (currentY + 50), i - 1, j);
+                                        drawDoubleTeams(g, teams1, (int)(currentX - 200*scaleRatio), (int) (currentY + 50), i - 1, j);
                                         String test = "Round " + (2) + " Match " + u;
-                                        g.drawString(test, currentX - 200, (int) (currentY - 50));
+                                        g.drawString(test, (int)(currentX - 200*scaleRatio), (int) (currentY - 50));
                                     }
 
                                 }
