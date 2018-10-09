@@ -18,6 +18,7 @@ public class Display extends JFrame {
 
     //class variables
     private JPanel displayPanel;
+    private JFrame thisFrame;
     private Bracket tournament;
     private static double scaleRatio;
     private static double heightMultiplier = 1;
@@ -68,6 +69,7 @@ public class Display extends JFrame {
         displayPanel.setBackground(new Color(10, 10, 10, 255));
         displayPanel.setPreferredSize(new Dimension((int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth()+ widthMultiplier), (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()* heightMultiplier)));
         this.pack();
+        this.thisFrame = this;
         //scroll bar
         JScrollPane scroll = new JScrollPane(displayPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         this.add(scroll);
@@ -85,9 +87,8 @@ public class Display extends JFrame {
      * @param tournament the tournament bracket
      */
     public void update(Bracket tournament) {
-        this.dispose();
-        new Display(tournament);
-
+        thisFrame.dispose();
+        thisFrame = new Display(tournament);
     }
 
     private int getMaxNumOfMatches() {
@@ -278,11 +279,12 @@ public class Display extends JFrame {
             g.setColor(WHITE);
 
             drawWinner(g, ((tournament.getNumberOfRounds() * 200) + 200), (tournament.getNumberOfTeams()*200)/2, tournament.getTournamentWinner());
-
+            //double preWY = 0;
+            //double preLY = 0;
             //int i = 4;
             //i = round number
-            for (int i = tournament.getNumberOfRounds(); i > 1; i--) {
-            //for (int i = tournament.getNumberOfRounds(); i > 5; i--) {
+            for (int i = tournament.getNumberOfRounds(); i > 2; i--) {
+                //for (int i = tournament.getNumberOfRounds(); i > 5; i--) {
 
                 Font font1 = new Font("Arial", Font.BOLD, (int) (22 * scaleRatio));
                 g.setFont(font1);
@@ -301,8 +303,7 @@ public class Display extends JFrame {
                 double hw = y2 - y1;
                 double y3 = y2 + ((tournament.getNumberOfTeams() / 2) * 200);
                 double hl = y3 - y2;
-                double preWY = 0;
-                double preLY = 0;
+
 
                 if (i != 3) { //if round is not 3 (3 has special case
 
@@ -332,8 +333,8 @@ public class Display extends JFrame {
                             //coordinates
                             double currentY = 0; //sets y in winner half
 
-
-
+                            //int[] preWY = new int[tournament.getNumberOfMatchesInRound(i)];
+                            //int[] preLY = new int[tournament.getNumberOfMatchesInRound(i)];
                             //draw final round
                             if (i == tournament.getNumberOfRounds()) {
                                 currentY = ((hw / (winC + 1)) * j); //sets y in winner half
@@ -341,7 +342,7 @@ public class Display extends JFrame {
                                 String test = "Round " + i + " Match " + j;
                                 drawTeams(g, teams, (currentX), (int) (currentY), i - 1, j);
                                 g.drawString(test, currentX, (int) (currentY));
-                                preWY = currentY;
+                                //preWY = currentY;
                             }
 
 
@@ -362,23 +363,23 @@ public class Display extends JFrame {
                                 if (teams1 != null && teams1.length > 0) {
                                     if (checkTeams(teams[0], teams1)) {
                                         if (drawn < numDraw) { //prevents duplicate
-                                            g.drawImage(match, (int)(currentX - 200*scaleRatio), (int) (currentY), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
-                                            //g.drawLine((int)(currentX-200*scaleRatio) + (int) ((140 * scaleRatio)), (int) (currentY + (70 * scaleRatio)/2), (currentX), (int) (preWY + (70 * scaleRatio)/2));
+                                            g.drawImage(match, currentX - 200, (int) (currentY), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
+                                            //g.drawLine((currentX-200) + (int) ((140 * scaleRatio)), (int) (currentY + (70 * scaleRatio)/2), (currentX), (int) (preWY + (70 * scaleRatio)/2));
                                             drawDoubleTeams(g, teams1, currentX - 200, (int) (currentY), i - 1, j);
                                             String test = "Round " + (i - 1) + " Match " + u;
                                             g.drawString(test, currentX - 200, (int) (currentY));
                                             drawn++;
-                                            preWY = currentY;
+                                            //preWY = currentY;
                                         }
                                     } else if (checkTeams(teams[1], teams1)) {
                                         if (drawn < numDraw) { //prevents duplicate
-                                            g.drawImage(match, (int)(currentX - 200*scaleRatio), (int) (currentY), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
-                                            //g.drawLine((int)(currentX-200*scaleRatio) + (int) ((140 * scaleRatio)), (int) (currentY + (70 * scaleRatio)/2), (currentX), (int) (preWY + (70 * scaleRatio)/2));
+                                            g.drawImage(match, currentX - 200, (int) (currentY), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
+                                            //g.drawLine((currentX-200) + (int) ((140 * scaleRatio)), (int) (currentY + (70 * scaleRatio)/2), (currentX), (int) (preWY + (70 * scaleRatio)/2));
                                             drawDoubleTeams(g, teams1, currentX - 200, (int) (currentY), i - 1, j);
                                             String test = "Round " + (i - 1) + " Match " + u;
                                             g.drawString(test, currentX - 200, (int) (currentY));
                                             drawn++;
-                                            preWY = currentY;
+                                            //preWY = currentY;
                                         }
                                     }
 
@@ -544,7 +545,6 @@ public class Display extends JFrame {
 
             }//end round loop
         }
-
         private void drawDoubleTeams(Graphics g, String[][] teams, int x, int y, int round, int match) {
 
             Font font = new Font("Arial", Font.PLAIN, (int)(16*scaleRatio));
