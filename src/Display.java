@@ -281,7 +281,7 @@ public class Display extends JFrame {
 
             //int i = 4;
             //i = round number
-            for (int i = tournament.getNumberOfRounds(); i > 5; i--) {
+            for (int i = tournament.getNumberOfRounds(); i > 2; i--) {
 
                 Font font1 = new Font("Arial", Font.BOLD, (int) (22 * scaleRatio));
                 g.setFont(font1);
