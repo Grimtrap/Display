@@ -19,6 +19,7 @@ public class Display extends JFrame {
     //class variables
     private JPanel displayPanel;
     private Bracket tournament;
+    private JFrame thisFrame;
     private static double scaleRatio;
     private static double heightMultiplier = 1;
     private static double widthMultiplier = 0;
@@ -68,6 +69,7 @@ public class Display extends JFrame {
         displayPanel.setBackground(new Color(10, 10, 10, 255));
         displayPanel.setPreferredSize(new Dimension((int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth()+ widthMultiplier), (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()* heightMultiplier)));
         this.pack();
+        this.thisFrame = this;
         //scroll bar
         JScrollPane scroll = new JScrollPane(displayPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         this.add(scroll);
@@ -85,8 +87,8 @@ public class Display extends JFrame {
      * @param tournament the tournament bracket
      */
     public void update(Bracket tournament) {
-        this.dispose();
-        new Display(tournament);
+        thisFrame.dispose();
+        thisFrame = new Display(tournament);
 
     }
 
@@ -284,9 +286,9 @@ public class Display extends JFrame {
             double[] preLY = new double[tournament.getNumberOfTeams()];
             double[] curWY = new double[tournament.getNumberOfTeams()];
             double[] curLY = new double[tournament.getNumberOfTeams()];
-            //int i = 4;
+            int i = 4;
             //i = round number
-            for (int i = tournament.getNumberOfRounds(); i > 2; i--) {
+            //for (int i = tournament.getNumberOfRounds(); i > 2; i--) {
             //for (int i = tournament.getNumberOfRounds(); i > 3; i--) {
 
                 Font font1 = new Font("Arial", Font.BOLD, (int) (22 * scaleRatio));
@@ -632,7 +634,7 @@ public class Display extends JFrame {
                     } //end match loop
                 }
 
-            }//end round loop
+            //}//end round loop
         }
 
         private void drawDoubleTeams(Graphics g, String[][] teams, int x, int y, int round, int match) {
