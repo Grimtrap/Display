@@ -18,7 +18,6 @@ public class Display extends JFrame {
 
     //class variables
     private JPanel displayPanel;
-    private JFrame thisFrame;
     private Bracket tournament;
     private static double scaleRatio;
     private static double heightMultiplier = 1;
@@ -69,7 +68,6 @@ public class Display extends JFrame {
         displayPanel.setBackground(new Color(10, 10, 10, 255));
         displayPanel.setPreferredSize(new Dimension((int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth()+ widthMultiplier), (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()* heightMultiplier)));
         this.pack();
-        this.thisFrame = this;
         //scroll bar
         JScrollPane scroll = new JScrollPane(displayPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         this.add(scroll);
@@ -87,8 +85,9 @@ public class Display extends JFrame {
      * @param tournament the tournament bracket
      */
     public void update(Bracket tournament) {
-        thisFrame.dispose();
-        thisFrame = new Display(tournament);
+        this.dispose();
+        new Display(tournament);
+
     }
 
     private int getMaxNumOfMatches() {
@@ -281,16 +280,22 @@ public class Display extends JFrame {
             drawWinner(g, ((tournament.getNumberOfRounds() * 200) + 200), (tournament.getNumberOfTeams()*200)/2, tournament.getTournamentWinner());
             //double preWY = 0;
             //double preLY = 0;
+            double[] preWY = new double[tournament.getNumberOfTeams()];
+            double[] preLY = new double[tournament.getNumberOfTeams()];
+            double[] curWY = new double[tournament.getNumberOfTeams()];
+            double[] curLY = new double[tournament.getNumberOfTeams()];
             //int i = 4;
             //i = round number
             for (int i = tournament.getNumberOfRounds(); i > 2; i--) {
-                //for (int i = tournament.getNumberOfRounds(); i > 5; i--) {
+            //for (int i = tournament.getNumberOfRounds(); i > 3; i--) {
 
                 Font font1 = new Font("Arial", Font.BOLD, (int) (22 * scaleRatio));
                 g.setFont(font1);
                 //g.drawString("Round " + i, currentX, (int)(70*scaleRatio));
                 int winC = 0; //num win bracket matches in round - 1
                 int loseC = 0; //num lose bracket in round - 1
+                int currentW = 0;
+                int currentL = 0;
 
 
 
@@ -319,10 +324,27 @@ public class Display extends JFrame {
                         }
 
                     }
-                    int yC = 1;
+
+                    /*for (int f = 1; f <= tournament.getNumberOfMatchesInRound(i); f++) { //counts num of win bracket matches
+                        if (tournament.getMatchBracket(i-1, f) == 0) {
+                            currentW++;
+                        }
+
+                    }*/
+                    for (int f = 1; f <= tournament.getNumberOfMatchesInRound(i); f++) {
+                        if (tournament.getMatchBracket(i, f) == 1) {
+                            currentL++;
+                        }
+
+                    }
+
+                    double yy2=0;
                     //j = match number
                     int numDraw = tournament.getNumberOfMatchesInRound(i-1); //counts how many matches that need to be drawn
                     int drawn = 0; //num matches drawn in round (prevents duplicate drawing)
+
+                    preWY = curWY;
+                    preLY = curLY;
                     for (int j = 1; j <= tournament.getNumberOfMatchesInRound(i); j++) {
 
                         String[][] teams = tournament.getTeamsInMatch(i, j);
@@ -333,8 +355,7 @@ public class Display extends JFrame {
                             //coordinates
                             double currentY = 0; //sets y in winner half
 
-                            //int[] preWY = new int[tournament.getNumberOfMatchesInRound(i)];
-                            //int[] preLY = new int[tournament.getNumberOfMatchesInRound(i)];
+
                             //draw final round
                             if (i == tournament.getNumberOfRounds()) {
                                 currentY = ((hw / (winC + 1)) * j); //sets y in winner half
@@ -342,14 +363,14 @@ public class Display extends JFrame {
                                 String test = "Round " + i + " Match " + j;
                                 drawTeams(g, teams, (currentX), (int) (currentY), i - 1, j);
                                 g.drawString(test, currentX, (int) (currentY));
-                                //preWY = currentY;
+                                preWY[j-1] = currentY;
                             }
 
-
+                            int yC = 1;
                             //determines whether certain matches exist or not
                             for (int u = 1; u <= tournament.getNumberOfMatchesInRound(i - 1); u++) {
 
-                                //String[][] teams1;
+
                                 teams1 = tournament.getTeamsInMatch(i - 1, u);
 
                                 if (tournament.getMatchBracket(i - 1, u) == 0) { //sets y into win bracket half of screen
@@ -362,24 +383,59 @@ public class Display extends JFrame {
                                 //checks whether the winner of a previous match can go to the current match, draws accordingly
                                 if (teams1 != null && teams1.length > 0) {
                                     if (checkTeams(teams[0], teams1)) {
+
                                         if (drawn < numDraw) { //prevents duplicate
                                             g.drawImage(match, currentX - 200, (int) (currentY), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
-                                            //g.drawLine((currentX-200) + (int) ((140 * scaleRatio)), (int) (currentY + (70 * scaleRatio)/2), (currentX), (int) (preWY + (70 * scaleRatio)/2));
+                                            if (tournament.getMatchBracket(i-1, u) == 0) { //sets y into win bracket half of screen
+                                                yy2 = preWY[u-1];
+                                            } else if (tournament.getMatchBracket(i - 1, u) == 1) { //sets y into lose bracket half of screen
+                                                yy2  = preLY[(u - winC) - 1];
+                                            }
+                                            if (tournament.getMatchBracket(i, j) == tournament.getMatchBracket(i-1, u)) {
+                                                g.drawLine((currentX - 200) + (int) ((140 * scaleRatio)), (int) (currentY + (70 * scaleRatio) / 2), (currentX), (int) (yy2 + (70 * scaleRatio) / 2));
+                                            }
                                             drawDoubleTeams(g, teams1, currentX - 200, (int) (currentY), i - 1, j);
                                             String test = "Round " + (i - 1) + " Match " + u;
                                             g.drawString(test, currentX - 200, (int) (currentY));
                                             drawn++;
-                                            //preWY = currentY;
+                                            if (tournament.getMatchBracket(i - 1, u) == 0) { //sets y into win bracket half of screen
+                                                for (int p = 0; p < winC; p++) {
+                                                    curWY[p] = currentY;
+                                                }
+                                            } else if (tournament.getMatchBracket(i - 1, u) == 1) { //sets y into lose bracket half of screen
+                                                for(int k = 0; k < loseC;k++) {
+                                                    curLY[k] = currentY;
+                                                }
+                                            }
+                                            //preWY[u-1] = currentY;
                                         }
                                     } else if (checkTeams(teams[1], teams1)) {
                                         if (drawn < numDraw) { //prevents duplicate
+
                                             g.drawImage(match, currentX - 200, (int) (currentY), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
-                                            //g.drawLine((currentX-200) + (int) ((140 * scaleRatio)), (int) (currentY + (70 * scaleRatio)/2), (currentX), (int) (preWY + (70 * scaleRatio)/2));
+                                            if (tournament.getMatchBracket(i-1, u) == 0) { //sets y into win bracket half of screen
+                                                yy2 = preWY[u-1];
+                                            } else if (tournament.getMatchBracket(i - 1, u) == 1) { //sets y into lose bracket half of screen
+                                                yy2  = preLY[(u - winC) - 1];
+                                            }
+                                            if (tournament.getMatchBracket(i, j) == tournament.getMatchBracket(i-1, u)) {
+                                                g.drawLine((currentX - 200) + (int) ((140 * scaleRatio)), (int) (currentY + (70 * scaleRatio) / 2), (currentX), (int) (yy2 + (70 * scaleRatio) / 2));
+                                            }
+
                                             drawDoubleTeams(g, teams1, currentX - 200, (int) (currentY), i - 1, j);
                                             String test = "Round " + (i - 1) + " Match " + u;
                                             g.drawString(test, currentX - 200, (int) (currentY));
                                             drawn++;
-                                            //preWY = currentY;
+                                            if (tournament.getMatchBracket(i - 1, u) == 0) { //sets y into win bracket half of screen
+                                                for (int p = 0; p < winC; p++) {
+                                                    curWY[p] = currentY;
+                                                }
+                                            } else if (tournament.getMatchBracket(i - 1, u) == 1) { //sets y into lose bracket half of screen
+                                                for(int k = 0; k < loseC;k++) {
+                                                    curLY[k] = currentY;
+                                                }
+                                            }
+
                                         }
                                     }
 
@@ -394,11 +450,11 @@ public class Display extends JFrame {
                             //coordinates
                             double currentY = 0; //sets y in loser bracket half
 
-
+                            int yC = 1;
                             //determines whether certain matches exist or not
                             for (int u = 1; u <= tournament.getNumberOfMatchesInRound(i - 1); u++) {
 
-                                //String[][] teams1;
+
                                 teams1 = tournament.getTeamsInMatch(i - 1, u);
 
 
@@ -413,25 +469,58 @@ public class Display extends JFrame {
                                 //checks whether the winner of a previous match can go to the current match, draws accordingly
                                 if (teams1 != null && teams1.length > 0) {
                                     if (checkTeams(teams[0], teams1)) {
+                                        if (tournament.getMatchBracket(i-1, u) == 0) { //sets y into win bracket half of screen
+                                            yy2 = preWY[u-1];
+                                        } else if (tournament.getMatchBracket(i - 1, u) == 1) { //sets y into lose bracket half of screen
+                                            yy2  = preLY[(u - winC) - 1];
+                                        }
+                                        if (tournament.getMatchBracket(i, j) == tournament.getMatchBracket(i-1, u)) {
+                                            g.drawLine((currentX - 200) + (int) ((140 * scaleRatio)), (int) (currentY + (70 * scaleRatio) / 2), (currentX), (int) (yy2 + (70 * scaleRatio) / 2));
+                                        }
                                         if (drawn < numDraw) { //same as above
                                             g.drawImage(match, currentX - 200, (int) (currentY), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
-                                            //g.drawLine((currentX-200) - (int) (140 * scaleRatio), (int) (currentY), (currentX), (int) (preLY));
                                             drawDoubleTeams(g, teams1, currentX - 200, (int) (currentY), i - 1, j);
                                             String test = "Round " + (i - 1) + " Match " + u;
                                             g.drawString(test, currentX - 200, (int) (currentY));
                                             drawn++;
-                                            //preLY = currentY;
+                                            if (tournament.getMatchBracket(i - 1, u) == 0) { //sets y into win bracket half of screen
+                                                for (int p = 0; p < winC; p++) {
+                                                    curWY[p] = currentY;
+                                                }
+                                            } else if (tournament.getMatchBracket(i - 1, u) == 1) { //sets y into lose bracket half of screen
+                                                for(int k = 0; k < loseC;k++) {
+                                                    curLY[k]  = currentY;
+                                                }
+                                            }
+
                                         }
 
                                     } else if (checkTeams(teams[1], teams1)) {
+                                        if (tournament.getMatchBracket(i-1, u) == 0) { //sets y into win bracket half of screen
+                                            yy2 = preWY[u-1];
+                                        } else if (tournament.getMatchBracket(i - 1, u) == 1) { //sets y into lose bracket half of screen
+                                            yy2  = preLY[(u - winC) - 1];
+                                        }
+                                        if (tournament.getMatchBracket(i, j) == tournament.getMatchBracket(i-1, u)) {
+                                            g.drawLine((currentX - 200) + (int) ((140 * scaleRatio)), (int) (currentY + (70 * scaleRatio) / 2), (currentX), (int) (yy2 + (70 * scaleRatio) / 2));
+                                        }
                                         if (drawn < numDraw) { //same as above
                                             g.drawImage(match, currentX - 200, (int) (currentY), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
+
                                             //g.drawLine((currentX-200) - (int) (140 * scaleRatio), (int) (currentY), (currentX), (int) (preLY));
                                             drawDoubleTeams(g, teams1, currentX - 200, (int) (currentY), i - 1, j);
                                             String test = "Round " + (i - 1) + " Match " + u;
                                             g.drawString(test, currentX - 200, (int) (currentY));
                                             drawn++;
-                                            //preLY = currentY;
+                                            if (tournament.getMatchBracket(i - 1, u) == 0) { //sets y into win bracket half of screen
+                                                for (int p = 0; p < winC; p++) {
+                                                    curWY[p] = currentY;
+                                                }
+                                            } else if (tournament.getMatchBracket(i - 1, u) == 1) { //sets y into lose bracket half of screen
+                                                for(int k = 0; k < loseC;k++) {
+                                                    curLY[k]  = currentY;
+                                                }
+                                            }
                                         }
                                     }
 
@@ -545,6 +634,7 @@ public class Display extends JFrame {
 
             }//end round loop
         }
+
         private void drawDoubleTeams(Graphics g, String[][] teams, int x, int y, int round, int match) {
 
             Font font = new Font("Arial", Font.PLAIN, (int)(16*scaleRatio));
