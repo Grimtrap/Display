@@ -198,6 +198,8 @@ public class Display extends JFrame {
                     if (i == tournament.getNumberOfRounds()) {
                         g.drawImage(match, (currentX), (int) (currentY), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
                         drawTeams(g, teams, (currentX), (int) (currentY), i-1, j);
+                        g.setFont(font1);
+                        g.drawString(Integer.toString(j), (int)(currentX-30*scaleRatio), (int)(currentY+35*scaleRatio));
                     }
 
 
@@ -210,14 +212,14 @@ public class Display extends JFrame {
 
                         teams1 = tournament.getTeamsInMatch(i - 1, u);
 
-                        //draws the final bracket
-
 
                         //checks whether the winner of a previous match can go to the current match, draws accordingly
                             if (teams1 != null && teams1.length > 0) {
                                 if (checkTeams(teams[0], teams1)) {
                                     g.drawImage(match, connectionPointX, (int)(currentY-nextShift), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
                                     g.drawLine(currentX, (int)(currentY+(35*scaleRatio)), (int)(connectionPointX+140*scaleRatio), (int)(currentY-nextShift+35*scaleRatio));
+                                    g.setFont(font1);
+                                    g.drawString(Integer.toString(u), (int)(connectionPointX-30*scaleRatio), (int)(currentY-nextShift+35*scaleRatio));
                                     drawTeams(g, teams1, connectionPointX, (int)(currentY-nextShift), i-1, j);
 
                                 }
@@ -227,7 +229,8 @@ public class Display extends JFrame {
                                 if (checkTeams(teams[1], teams1)) {
                                     g.drawImage(match, connectionPointX, (int)(currentY+nextShift), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
                                     g.drawLine(currentX, (int)(currentY+(35*scaleRatio)), (int)(connectionPointX+140*scaleRatio), (int)(currentY+nextShift+35*scaleRatio));
-
+                                    g.setFont(font1);
+                                    g.drawString(Integer.toString(u), (int)(connectionPointX-30*scaleRatio), (int)(currentY+nextShift+35*scaleRatio));
                                     drawTeams(g, teams1, connectionPointX, (int)(currentY+nextShift), i-1 ,j);
                                 }
 
