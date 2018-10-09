@@ -281,7 +281,7 @@ public class Display extends JFrame {
 
             //int i = 4;
             //i = round number
-            for (int i = tournament.getNumberOfRounds(); i > 2; i--) {
+            for (int i = tournament.getNumberOfRounds(); i > 1; i--) {
 
                 Font font1 = new Font("Arial", Font.BOLD, (int) (22 * scaleRatio));
                 g.setFont(font1);
@@ -292,9 +292,9 @@ public class Display extends JFrame {
 
 
                 //coordinates
-                int xR = i * 200;
-                int xL = xR - 200;
-                int currentX = (xL + xR) / 2;
+                double xR = i * 200*scaleRatio;
+                double xL = xR - 200*scaleRatio;
+                int currentX = (int)((xL + xR) / 2);
                 double y1 = 0;
                 double y2 = tournament.getNumberOfTeams() * 200;
                 double hw = y2 - y1;
@@ -361,8 +361,8 @@ public class Display extends JFrame {
                                 if (teams1 != null && teams1.length > 0) {
                                     if (checkTeams(teams[0], teams1)) {
                                         if (drawn < numDraw) { //prevents duplicate
-                                            g.drawImage(match, currentX - 200, (int) (currentY), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
-                                            g.drawLine((currentX-200) + (int) ((140 * scaleRatio)), (int) (currentY + (70 * scaleRatio)/2), (currentX), (int) (preWY + (70 * scaleRatio)/2));
+                                            g.drawImage(match, (int)(currentX - 200*scaleRatio), (int) (currentY), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
+                                            g.drawLine((int)(currentX-200*scaleRatio) + (int) ((140 * scaleRatio)), (int) (currentY + (70 * scaleRatio)/2), (currentX), (int) (preWY + (70 * scaleRatio)/2));
                                             drawDoubleTeams(g, teams1, currentX - 200, (int) (currentY), i - 1, j);
                                             String test = "Round " + (i - 1) + " Match " + u;
                                             g.drawString(test, currentX - 200, (int) (currentY));
@@ -371,11 +371,11 @@ public class Display extends JFrame {
                                         }
                                     } else if (checkTeams(teams[1], teams1)) {
                                         if (drawn < numDraw) { //prevents duplicate
-                                            g.drawImage(match, currentX - 200, (int) (currentY), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
-                                            g.drawLine((currentX-200) + (int) ((140 * scaleRatio)), (int) (currentY + (70 * scaleRatio)/2), (currentX), (int) (preWY + (70 * scaleRatio)/2));
+                                            g.drawImage(match, (int)(currentX - 200*scaleRatio), (int) (currentY), (int) (140 * scaleRatio), (int) (70 * scaleRatio), null);
+                                            g.drawLine((int)(currentX-200*scaleRatio) + (int) ((140 * scaleRatio)), (int) (currentY + (70 * scaleRatio)/2), (currentX), (int) (preWY + (70 * scaleRatio)/2));
                                             drawDoubleTeams(g, teams1, currentX - 200, (int) (currentY), i - 1, j);
                                             String test = "Round " + (i - 1) + " Match " + u;
-                                            g.drawString(test, currentX - 200, (int) (currentY));
+                                            g.drawString(test, (int)(currentX - 200*scaleRatio), (int) (currentY));
                                             drawn++;
                                             preWY = currentY;
                                         }
