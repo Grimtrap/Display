@@ -279,8 +279,9 @@ public class Display extends JFrame {
 
             g.setColor(WHITE);
 
-            double winY = ((tournament.getNumberOfTeams() * 100) + ((tournament.getNumberOfTeams() / 2) * 100))+200;
-            double winX = 100;
+            double winY = ((tournament.getNumberOfTeams() * 100) + ((tournament.getNumberOfTeams() / 2) * 100))-200;
+            double winX = tournament.getNumberOfRounds()*100+400;
+            //double winX = 100;
 
             drawDoubleWinner(g, (int)(winX), (int)(winY), tournament.getTournamentWinner());
 
@@ -335,7 +336,7 @@ public class Display extends JFrame {
                     double hl = y3 - y2;
 
                     //Draws titles and line dividing brackets
-                    g.drawLine(0, (int) (y2), (tournament.getNumberOfRounds() * 200), (int) (y2));
+                    g.drawLine(0, (int) (y2), (tournament.getNumberOfRounds() * 200)+200, (int) (y2));
                     g.drawString("Winner's Bracket", 50, (int) (y1 + 20));
                     g.drawString("Loser's Bracket", 50, (int) (y2 + 20));
 
